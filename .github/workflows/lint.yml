@@ -48,5 +48,4 @@ jobs:
           pip-sync requirements/requirements.txt requirements/requirements-dev.txt
       - name: Run mypy
         run: |
-          pip install -r requirements/requirements.txt requirements/requirements-dev.txt
           mypy src/
