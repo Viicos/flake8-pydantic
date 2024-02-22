@@ -26,6 +26,10 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
 ]
+dependencies = [
+    "flake8",
+    "typing-extensions>=4.4.0; python_version < '3.11'",
+]
 license = {file = "LICENSE"}
 
 [project.urls]
