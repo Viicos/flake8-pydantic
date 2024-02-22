@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flake8-pydantic"
+version = "0.1.0"
+description = "A flake8 plugin to check Pydantic related code."
+authors = [
+    {name = "Victorien", email = "contact@vctrn.dev"}
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
+license = {file = "LICENSE"}
+
+[project.urls]
+Homepage = "https://github.com/Viicos/flake8-pydantic"
+Source = "https://github.com/Viicos/flake8-pydantic"
+Changelog = "https://github.com/Viicos/flake8-pydantic/blob/main/CHANGELOG.md"
+Documentation = "https://viicos.github.io/flake8-pydantic/"
+
+[project.entry-points."flake8.extension"]
+PYD = "flake8_pydantic:Plugin"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"flake8_pydantic" = ["py.typed"]
+
+[tool.ruff]
+line-length = 120
+src = ["src"]
+target-version = "py38"
+
+[tool.ruff.lint]
+preview = true
+explicit-preview-rules = true
+select = [
+    "E",      # pycodestyle (E)
+    "W",      # pycodestyle (W)
+    "F",      # Pyflakes
+    "UP",     # pyupgrade
+    "I",      # isort
+    "PL",     # Pylint
+    "RUF",    # Ruff
+    "RUF022", # Ruff-preview
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["flake8_pydantic"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
