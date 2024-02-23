@@ -4,6 +4,8 @@ import ast
 from importlib.metadata import version
 from typing import Any, Iterator
 
+from .visitor import Visitor
+
 
 class Plugin:
     name = "flake8-pydantic"
@@ -13,4 +15,7 @@ class Plugin:
         self._tree = tree
 
     def run(self) -> Iterator[tuple[int, int, str, type[Any]]]:
-        pass
+        visitor = Visitor()
+        visitor.visit(self._tree)
+        for error in visitor.errors:
+            yield *error.as_flake8_error(), type(self)

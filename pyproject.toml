@@ -72,5 +72,8 @@ select = [
 [tool.ruff.lint.isort]
 known-first-party = ["flake8_pydantic"]
 
+[tool.mypy]
+strict = true
+
 [tool.pytest.ini_options]
 pythonpath = "src"

@@ -23,4 +23,14 @@ class Error(ABC):
 
 class PYD001(Error):
     error_code = "PYD001"
-    message = "Non-annotated attribute"
+    message = "Positional argument for Field default argument"
+
+
+class PYD002(Error):
+    error_code = "PYD002"
+    message = "Non-annotated attribute inside Pydantic model"
+
+
+class PYD010(Error):
+    error_code = "PYD010"
+    message = "Usage of __pydantic_config__"
