@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flake8-pydantic"
-version = "0.1.0.post0"
+version = "0.2.0"
 description = "A flake8 plugin to check Pydantic related code."
 readme = "README.md"
 authors = [
@@ -25,6 +25,9 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
+    "Framework :: Flake8",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
 ]
 dependencies = [
     "flake8",
@@ -36,7 +39,6 @@ license = {file = "LICENSE"}
 Homepage = "https://github.com/Viicos/flake8-pydantic"
 Source = "https://github.com/Viicos/flake8-pydantic"
 Changelog = "https://github.com/Viicos/flake8-pydantic/blob/main/CHANGELOG.md"
-Documentation = "https://viicos.github.io/flake8-pydantic/"
 
 [project.entry-points."flake8.extension"]
 PYD = "flake8_pydantic:Plugin"

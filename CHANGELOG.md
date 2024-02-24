@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 (2024-02-24)
+
+Add three new rules:
+- `PYD003` - *Unecessary Field call to specify a default value*
+- `PYD004` - *Default argument specified in annotated*
+- `PYD005` - *Field name overrides annotation*
+
+- Drop support for Python 3.8
+
 ## 0.1.0.post0 (2024-02-23)
 
 - Add missing `readme` metadata entry
