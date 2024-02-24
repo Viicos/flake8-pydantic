@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import ast
+from collections.abc import Iterator
 from importlib.metadata import version
-from typing import Any, Iterator
+from typing import Any
 
 from .visitor import Visitor
 

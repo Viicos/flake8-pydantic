@@ -79,7 +79,7 @@ def _has_pydantic_decorator(node: ast.ClassDef) -> bool:
     for stmt in node.body:
         if isinstance(stmt, ast.FunctionDef):
             decorator_names = get_decorator_names(stmt.decorator_list)
-            if PYDANTIC_DECORATORS.intersection(decorator_names):
+            if PYDANTIC_DECORATORS & decorator_names:
                 return True
     return False
 
@@ -89,12 +89,6 @@ def _has_pydantic_method(node: ast.ClassDef) -> bool:
         if isinstance(stmt, ast.FunctionDef) and stmt.name.startswith(("model_", "__pydantic_")):
             return True
     return False
-
-
-def is_dataclass(node: ast.ClassDef) -> bool:
-    """Determine if a class is a dataclass."""
-
-    return bool({"dataclass", "pydantic_dataclass"}.intersection(get_decorator_names(node.decorator_list)))
 
 
 def is_pydantic_model(node: ast.ClassDef, include_root_model: bool = True) -> bool:
@@ -119,3 +113,44 @@ def is_pydantic_model(node: ast.ClassDef, include_root_model: bool = True) -> bo
         or _has_pydantic_decorator(node)
         or _has_pydantic_method(node)
     )
+
+
+def is_dataclass(node: ast.ClassDef) -> bool:
+    """Determine if a class is a dataclass."""
+
+    return bool({"dataclass", "pydantic_dataclass"} & get_decorator_names(node.decorator_list))
+
+
+def is_function(node: ast.Call, function_name: str) -> bool:
+    return (
+        isinstance(node.func, ast.Name)
+        and node.func.id == function_name
+        or isinstance(node.func, ast.Attribute)
+        and node.func.attr == function_name
+    )
+
+
+def is_name(node: ast.expr, name: str) -> bool:
+    return isinstance(node, ast.Name) and node.id == name or isinstance(node, ast.Attribute) and node.attr == name
+
+
+def extract_annotations(node: ast.expr) -> set[str]:
+    annotations: set[str] = set()
+
+    if isinstance(node, ast.Name):
+        # foo: date = ...
+        annotations.add(node.id)
+    if isinstance(node, ast.BinOp):
+        # foo: date | None = ...
+        annotations |= extract_annotations(node.left)
+        annotations |= extract_annotations(node.right)
+    if isinstance(node, ast.Subscript):
+        # foo: dict[str, date]
+        # foo: Annotated[list[date], ...]
+        if isinstance(node.slice, ast.Tuple):
+            for elt in node.slice.elts:
+                annotations |= extract_annotations(elt)
+        if isinstance(node.slice, ast.Name):
+            annotations.add(node.slice.id)
+
+    return annotations
