@@ -59,7 +59,7 @@ class Model(BaseModel):
         (PYD005_7, []),
     ],
 )
-def test_pyd003(source: str, expected: list[Error]) -> None:
+def test_pyd005(source: str, expected: list[Error]) -> None:
     module = ast.parse(source)
     visitor = Visitor()
     visitor.visit(module)
