@@ -33,6 +33,21 @@ class PYD002(Error):
     message = "Non-annotated attribute inside Pydantic model"
 
 
+class PYD003(Error):
+    error_code = "PYD003"
+    message = "Unecessary Field call to specify a default value"
+
+
+class PYD004(Error):
+    error_code = "PYD004"
+    message = "Default argument specified in annotated"
+
+
+class PYD005(Error):
+    error_code = "PYD005"
+    message = "Field name overrides annotation"
+
+
 class PYD010(Error):
     error_code = "PYD010"
     message = "Usage of __pydantic_config__"

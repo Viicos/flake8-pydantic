@@ -46,6 +46,68 @@ class Model(BaseModel):
     foo = 1  # Will error at runtime
 ```
 
+### `PYD003` - *Unecessary Field call to specify a default value*
+
+Raise an error if the [`Field`](https://docs.pydantic.dev/latest/api/fields/#pydantic.fields.Field) function
+is used only to specify a default value.
+
+```python
+class Model(BaseModel):
+    foo: int = Field(default=1)
+```
+
+Instead, consider specifying the default value directly:
+
+```python
+class Model(BaseModel):
+    foo: int = 1
+```
+
+### `PYD004` - *Default argument specified in annotated*
+
+Raise an error if the `default` argument of the [`Field`](https://docs.pydantic.dev/latest/api/fields/#pydantic.fields.Field) function is used together with [`Annotated`](https://docs.python.org/3/library/typing.html#typing.Annotated).
+
+```python
+class Model(BaseModel):
+    foo: Annotated[int, Field(default=1, description="desc")]
+```
+
+To make type checkers aware of the default value, consider specifying the default value directly:
+
+```python
+class Model(BaseModel):
+    foo: Annotated[int, Field(description="desc")] = 1
+```
+
+### `PYD005` - *Field name overrides annotation*
+
+Raise an error if the field name clashes with the annotation.
+
+```python
+from datetime import date
+
+class Model(BaseModel):
+    date: date | None = None
+```
+
+Because of how Python [evaluates](https://docs.python.org/3/reference/simple_stmts.html#annassign)
+annotated assignments, unexpected issues can happen when using an annotation name that clashes with a field
+name. Pydantic will try its best to warn you about such issues, but can fail in complex scenarios (and the
+issue may even be silently ignored).
+
+Instead, consider, using an [alias](https://docs.pydantic.dev/latest/concepts/fields/#field-aliases) or referencing your type under a different name:
+
+```python
+from datetime import date
+
+date_ = date
+
+class Model(BaseModel):
+    date_aliased: date | None = Field(default=None, alias="date")
+    # or
+    date: date_ | None = None
+```
+
 ### `PYD010` - *Usage of `__pydantic_config__`*
 
 Raise an error if a Pydantic configuration is set with [`__pydantic_config__`](https://docs.pydantic.dev/dev/concepts/config/#configuration-with-dataclass-from-the-standard-library-or-typeddict).

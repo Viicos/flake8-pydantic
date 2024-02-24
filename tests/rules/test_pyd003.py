@@ -4,21 +4,15 @@ import ast
 
 import pytest
 
-from flake8_pydantic.errors import PYD001, Error
+from flake8_pydantic.errors import PYD003, Error
 from flake8_pydantic.visitor import Visitor
 
-PYD001_MODEL = """
+PYD003_NOT_OK = """
 class Model(BaseModel):
-    a: int = Field(1)
+    a: int = Field(default=1)
 """
 
-PYD001_DATACLASS = """
-@dataclass
-class Model:
-    a: int = Field(1)
-"""
-
-PYD001_OK = """
+PYD003_OK = """
 class Model(BaseModel):
     a: int = Field(default=1, description="")
 """
@@ -27,12 +21,11 @@ class Model(BaseModel):
 @pytest.mark.parametrize(
     ["source", "expected"],
     [
-        (PYD001_MODEL, [PYD001(3, 4)]),
-        (PYD001_DATACLASS, [PYD001(4, 4)]),
-        (PYD001_OK, []),
+        (PYD003_NOT_OK, [PYD003(3, 4)]),
+        (PYD003_OK, []),
     ],
 )
-def test_pyd001(source: str, expected: list[Error]) -> None:
+def test_pyd003(source: str, expected: list[Error]) -> None:
     module = ast.parse(source)
     visitor = Visitor()
     visitor.visit(module)
