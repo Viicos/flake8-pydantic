@@ -6,7 +6,7 @@ from typing import Literal
 
 from ._compat import TypeAlias
 from ._utils import extract_annotations, is_dataclass, is_function, is_name, is_pydantic_model
-from .errors import PYD001, PYD002, PYD003, PYD004, PYD005, PYD010, Error
+from .errors import PYD001, PYD002, PYD003, PYD004, PYD005, PYD006, PYD010, Error
 
 ClassType: TypeAlias = Literal["pydantic_model", "dataclass", "other_class"]
 
@@ -95,6 +95,17 @@ class Visitor(ast.NodeVisitor):
                     if previous_targets & extract_annotations(stmt.annotation):
                         self.errors.append(PYD005.from_node(stmt))
 
+    def _check_pyd_006(self, node: ast.ClassDef) -> None:
+        if self.current_class in {"pydantic_model", "dataclass"}:
+            previous_targets: set[str] = set()
+
+            for stmt in node.body:
+                if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name):
+                    if stmt.target.id in previous_targets:
+                        self.errors.append(PYD006.from_node(stmt))
+
+                    previous_targets.add(stmt.target.id)
+
     def _check_pyd_010(self, node: ast.ClassDef) -> None:
         if self.current_class == "other_class":
             for stmt in node.body:
@@ -115,6 +126,7 @@ class Visitor(ast.NodeVisitor):
         self.enter_class(node)
         self._check_pyd_002(node)
         self._check_pyd_005(node)
+        self._check_pyd_006(node)
         self._check_pyd_010(node)
         self.generic_visit(node)
         self.leave_class()
