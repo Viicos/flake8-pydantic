@@ -48,6 +48,11 @@ class PYD005(Error):
     message = "Field name overrides annotation"
 
 
+class PYD006(Error):
+    error_code = "PYD005"
+    message = "Duplicate field name"
+
+
 class PYD010(Error):
     error_code = "PYD010"
     message = "Usage of __pydantic_config__"
