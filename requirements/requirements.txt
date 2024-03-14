@@ -12,13 +12,13 @@ mccabe==0.7.0
     # via flake8
 pycodestyle==2.11.1
     # via flake8
-pydantic==2.6.1
+pydantic==2.6.4
     # via -r requirements/requirements.in
-pydantic-core==2.16.2
+pydantic-core==2.16.3
     # via pydantic
 pyflakes==3.2.0
     # via flake8
-typing-extensions==4.9.0
+typing-extensions==4.10.0
     # via
     #   pydantic
     #   pydantic-core

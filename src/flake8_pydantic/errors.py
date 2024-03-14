@@ -49,7 +49,7 @@ class PYD005(Error):
 
 
 class PYD006(Error):
-    error_code = "PYD005"
+    error_code = "PYD006"
     message = "Duplicate field name"
 
 
