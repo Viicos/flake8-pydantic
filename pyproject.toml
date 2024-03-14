@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flake8-pydantic"
-version = "0.2.0"
+version = "0.3.0"
 description = "A flake8 plugin to check Pydantic related code."
 readme = "README.md"
 authors = [
