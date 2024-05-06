@@ -28,7 +28,9 @@ class Visitor(ast.NodeVisitor):
         self.class_stack.pop()
 
     @property
-    def current_class(self) -> ClassType:
+    def current_class(self) -> ClassType | None:
+        if not self.class_stack:
+            return None
         return self.class_stack[-1]
 
     def _check_pyd_001(self, node: ast.AnnAssign) -> None:
