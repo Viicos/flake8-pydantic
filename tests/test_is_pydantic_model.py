@@ -35,22 +35,32 @@ class SubModel(ParentModel):
 
 HAS_FIELD_FUNCTION_1 = """
 class SubModel(ParentModel):
-    a = Field()
+    a = Field(title="A")
 """
 
 HAS_FIELD_FUNCTION_2 = """
 class SubModel(ParentModel):
-    a: int = Field()
+    a: int = Field(gt=1)
 """
 
 HAS_FIELD_FUNCTION_3 = """
 class SubModel(ParentModel):
-    a = pydantic.Field()
+    a = pydantic.Field(alias="b")
 """
 
 HAS_FIELD_FUNCTION_4 = """
 class SubModel(ParentModel):
+    a: int = pydantic.Field(repr=True)
+"""
+
+HAS_FIELD_FUNCTION_5 = """
+class SubModel(ParentModel):
     a: int = pydantic.Field()
+"""
+
+HAS_FIELD_FUNCTION_6 = """
+class SubModel(ParentModel):
+    a: int = pydantic.Field(1)
 """
 
 USES_ANNOTATED_1 = """
@@ -86,10 +96,25 @@ class SubModel(ParentModel):
     def __pydantic_some_method__(self): pass
 """
 
+HAS_PYDANTIC_METHOD_3 = """
+class SubModel(ParentModel):
+    def __get_pydantic_core_schema__(self): pass
+"""
+
 # Negative cases:
 NO_BASES = """
 class Model:
     a = Field()
+"""
+
+UNRELATED_FIELD_ARG = """
+class SubModel(ParentModel):
+    a: int = Field(some_arg=1)
+"""
+
+UNRELATED_MODEL_METHOD = """
+class SubModel(ParentModel):
+    def model_unrelated(): pass
 """
 
 
@@ -105,13 +130,18 @@ class Model:
         (HAS_FIELD_FUNCTION_2, True),
         (HAS_FIELD_FUNCTION_3, True),
         (HAS_FIELD_FUNCTION_4, True),
+        (HAS_FIELD_FUNCTION_5, True),
+        (HAS_FIELD_FUNCTION_6, True),
         (USES_ANNOTATED_1, True),
         (USES_ANNOTATED_2, True),
         (HAS_PYDANTIC_DECORATOR_1, True),
         (HAS_PYDANTIC_DECORATOR_2, True),
         (HAS_PYDANTIC_METHOD_1, True),
         (HAS_PYDANTIC_METHOD_2, True),
+        (HAS_PYDANTIC_METHOD_3, True),
         (NO_BASES, False),
+        (UNRELATED_FIELD_ARG, False),
+        (UNRELATED_MODEL_METHOD, False),
     ],
 )
 def test_is_pydantic_model(source: str, expected: bool) -> None:
