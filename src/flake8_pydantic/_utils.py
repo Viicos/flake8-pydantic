@@ -16,7 +16,7 @@ def get_decorator_names(decorator_list: list[ast.expr]) -> set[str]:
     return names
 
 
-def _has_pydantic_model_base(node: ast.ClassDef, include_root_model: bool) -> bool:
+def _has_pydantic_model_base(node: ast.ClassDef, *, include_root_model: bool) -> bool:
     model_class_names = {"BaseModel"}
     if include_root_model:
         model_class_names.add("RootModel")
@@ -42,15 +42,55 @@ def _has_model_config(node: ast.ClassDef) -> bool:
     return False
 
 
+PYDANTIC_FIELD_ARGUMENTS = {
+    "default",
+    "default_factory",
+    "alias",
+    "alias_priority",
+    "validation_alias",
+    "title",
+    "description",
+    "examples",
+    "exclude",
+    "discriminator",
+    "json_schema_extra",
+    "frozen",
+    "validate_default",
+    "repr",
+    "init",
+    "init_var",
+    "kw_only",
+    "pattern",
+    "strict",
+    "gt",
+    "ge",
+    "lt",
+    "le",
+    "multiple_of",
+    "allow_inf_nan",
+    "max_digits",
+    "decimal_places",
+    "min_length",
+    "max_length",
+    "union_mode",
+}
+
+
 def _has_field_function(node: ast.ClassDef) -> bool:
     for stmt in node.body:
-        if isinstance(stmt, (ast.Assign, ast.AnnAssign)) and isinstance(stmt.value, ast.Call):
-            if isinstance(stmt.value.func, ast.Name) and stmt.value.func.id == "Field":
-                # f = Field(...)
-                return True
-            if isinstance(stmt.value.func, ast.Attribute) and stmt.value.func.attr == "Field":
-                # f = pydantic.Field(...)
-                return True
+        if (
+            isinstance(stmt, (ast.Assign, ast.AnnAssign))
+            and isinstance(stmt.value, ast.Call)
+            and (
+                (isinstance(stmt.value.func, ast.Name) and stmt.value.func.id == "Field")  # f = Field(...)
+                or (
+                    isinstance(stmt.value.func, ast.Attribute) and stmt.value.func.attr == "Field"
+                )  # f = pydantic.Field(...)
+            )
+            and all(kw.arg in PYDANTIC_FIELD_ARGUMENTS for kw in stmt.value.keywords if kw.arg is not None)
+        ):
+            return True
+
     return False
 
 
@@ -84,14 +124,30 @@ def _has_pydantic_decorator(node: ast.ClassDef) -> bool:
     return False
 
 
+PYDANTIC_METHODS = {
+    "model_construct",
+    "model_copy",
+    "model_dump",
+    "model_dump_json",
+    "model_json_schema",
+    "model_parametrized_name",
+    "model_rebuild",
+    "model_validate",
+    "model_validate_json",
+    "model_validate_strings",
+}
+
+
 def _has_pydantic_method(node: ast.ClassDef) -> bool:
     for stmt in node.body:
-        if isinstance(stmt, ast.FunctionDef) and stmt.name.startswith(("model_", "__pydantic_")):
+        if isinstance(stmt, ast.FunctionDef) and (
+            stmt.name.startswith(("__pydantic_", "__get_pydantic_")) or stmt.name in PYDANTIC_METHODS
+        ):
             return True
     return False
 
 
-def is_pydantic_model(node: ast.ClassDef, include_root_model: bool = True) -> bool:
+def is_pydantic_model(node: ast.ClassDef, *, include_root_model: bool = True) -> bool:
     """Determine if a class definition is a Pydantic model.
 
     Multiple heuristics are use to determine if this is the case:
@@ -106,7 +162,7 @@ def is_pydantic_model(node: ast.ClassDef, include_root_model: bool = True) -> bo
         return False
 
     return (
-        _has_pydantic_model_base(node, include_root_model)
+        _has_pydantic_model_base(node, include_root_model=include_root_model)
         or _has_model_config(node)
         or _has_field_function(node)
         or _has_annotated_field(node)
