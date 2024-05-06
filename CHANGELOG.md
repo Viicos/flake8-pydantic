@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 (2024-05-06)
+
+- Improve Pydantic model detection robustness (#11)
+- Fix crash in the visitor implementation (#10)
+
 ## 0.3.0 (2024-03-14)
 
 Add a new rule:
