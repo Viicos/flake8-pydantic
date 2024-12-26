@@ -178,16 +178,13 @@ def is_dataclass(node: ast.ClassDef) -> bool:
 
 
 def is_function(node: ast.Call, function_name: str) -> bool:
-    return (
-        isinstance(node.func, ast.Name)
-        and node.func.id == function_name
-        or isinstance(node.func, ast.Attribute)
-        and node.func.attr == function_name
+    return (isinstance(node.func, ast.Name) and node.func.id == function_name) or (
+        isinstance(node.func, ast.Attribute) and node.func.attr == function_name
     )
 
 
 def is_name(node: ast.expr, name: str) -> bool:
-    return isinstance(node, ast.Name) and node.id == name or isinstance(node, ast.Attribute) and node.attr == name
+    return (isinstance(node, ast.Name) and node.id == name) or (isinstance(node, ast.Attribute) and node.attr == name)
 
 
 def extract_annotations(node: ast.expr) -> set[str]:

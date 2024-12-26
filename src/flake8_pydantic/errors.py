@@ -16,7 +16,7 @@ class Error(ABC):
     col_offset: int
 
     @classmethod
-    def from_node(cls, node: ast.AST) -> Self:
+    def from_node(cls, node: ast.stmt) -> Self:
         return cls(lineno=node.lineno, col_offset=node.col_offset)
 
     def as_flake8_error(self) -> tuple[int, int, str]:
