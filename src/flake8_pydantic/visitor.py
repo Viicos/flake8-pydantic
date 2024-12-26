@@ -50,6 +50,7 @@ class Visitor(ast.NodeVisitor):
                 if isinstance(assign, ast.Assign)
                 if isinstance(assign.targets[0], ast.Name)
                 if not assign.targets[0].id.startswith("_")
+                if not assign.targets[0].id == "model_config"
             ]
             for assignment in invalid_assignments:
                 self.errors.append(PYD002.from_node(assignment))

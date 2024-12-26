@@ -17,6 +17,11 @@ class Model(BaseModel):
     _a = 1
 """
 
+PYD002_MODEL_MODEL_CONFIG = """
+class Model(BaseModel):
+    model_config = {}
+"""
+
 PYD002_DATACLASS = """
 @dataclass
 class Model:
@@ -29,6 +34,7 @@ class Model:
     [
         (PYD002_MODEL, [PYD002(3, 4)]),
         (PYD002_MODEL_PRIVATE_FIELD, []),
+        (PYD002_MODEL_MODEL_CONFIG, []),
         (PYD002_DATACLASS, []),
     ],
 )
