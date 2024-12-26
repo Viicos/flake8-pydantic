@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements/requirements-dev.in
 #
-mypy==1.10.0
+mypy==1.14.0
     # via -r requirements/requirements-dev.in
 mypy-extensions==1.0.0
     # via mypy
-ruff==0.4.3
+ruff==0.8.4
     # via -r requirements/requirements-dev.in
 typing-extensions==4.12.2
     # via
