@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 (2024-12-26)
+
+- Update dependencies (#18)
+  Apply new Ruff and mymy changes
+- Add support for Python 3.13 (#17)
+- Ignore non-annotated `model_config` attributes (#16)
+
 ## 0.3.1 (2024-05-06)
 
 - Improve Pydantic model detection robustness (#11)
